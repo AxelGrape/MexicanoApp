@@ -1,0 +1,181 @@
+﻿@page "/start"
+@using MexicanoFrontend.Models;
+@using System.Text.Json;
+@using Mexicano.Mexicano;
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+
+
+<h3>StartPage</h3>
+
+<div id="wrapper" class="container">
+    <div class="row">
+
+        <div id="player" class="col">
+            <EditForm Model="@Player" OnSubmit=@addPlayer>
+                <InputText placeholder="Add Player " @bind-Value="Player!.Name" required />
+                <button type="submit">Add</button>
+            </EditForm>
+            <p>Players: @PlayerList.Count</p>
+
+            <div class="row">
+                <div class="col">
+                    <h5>Player Name</h5>
+                </div>
+                <div class="col"></div>
+            </div>
+            @foreach (Player p in PlayerList!)
+            {
+                <div class="row">
+                    <div class="col">@p.Name</div>
+                    <div class="col"><button @onclick="() => removePlayer(p.Id)">Remove</button></div>
+                </div>
+            }
+        </div>
+
+        <div id="court" class="col">
+            <EditForm Model="@Court" OnSubmit=@addCourt>
+                <InputText placeholder="Add Court " @bind-Value="Court!.Name" required />
+                <button type="submit">Add</button>
+            </EditForm>
+            <p>Courts: @CourtList.Count</p>
+            <div class="row">
+                <div class="col">
+                    <h5>Court Name</h5>
+                </div>
+                <div class="col"></div>
+            </div>
+            @foreach (Court c in CourtList!)
+            {
+                <div class="row">
+                    <div class="col">@c.Name</div>
+                    <div class="col"><button @onclick="() => removeCourt(c.Id)">Remove</button></div>
+                </div>
+            }
+        </div>
+
+    </div>
+    <button @onclick="insertTestData">Use test data</button>
+    <button @onclick="startGame">Start Game</button>
+    <p>@startField</p>
+
+</div>
+
+@code
+{
+
+    public int MatchPoints = 0;
+
+    private List<Player> PlayerList = new List<Player>();
+
+    public String PlayerListJson = "";
+
+    protected Player? Player { get; set; }
+
+    protected override void OnInitialized()
+    {
+        Player ??= new();
+        Court ??= new();
+    }
+
+    public void addPlayer()
+    {
+
+        if (Player == null) return;
+        Player.Name = Player.Name.Trim();
+        if (Player.Name.Length == 0) return;
+        if (PlayerList.FirstOrDefault(p => p.Name == Player.Name) != null) return;
+
+
+        Player tmp = new Player { Name = Player.Name };
+        PlayerList.Add(tmp);
+        PlayerListJson = JsonSerializer.Serialize(PlayerList);
+        Player.Name = string.Empty;
+
+
+    }
+
+    private List<Court> CourtList = new List<Court>();
+
+    public String CourtListJson = "";
+
+    protected Court? Court { get; set; }
+
+    public void addCourt()
+    {
+
+        if (Court != null)
+        {
+            Court tmp = new Court { Name = Court.Name };
+            CourtList.Add(tmp);
+            CourtListJson = JsonSerializer.Serialize(CourtList);
+            Court.Name = string.Empty;
+        }
+
+
+    }
+
+    private bool verifyPlayerAndCourtCount()
+    {
+        if (CourtList.Count != 0 && PlayerList.Count != 0 && CourtList.Count * 4 == PlayerList.Count)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public String startField = "";
+
+    public void startGame()
+    {
+        if (!verifyPlayerAndCourtCount())
+        {
+            return;
+        }
+        startField = MexicanoInterface.StartMexicano(JsonSerializer.Serialize(PlayerList));
+        CourtListJson = JsonSerializer.Serialize(CourtList);
+        navigationManager.NavigateTo($"/activegame/{startField}/{CourtListJson}");
+
+    }
+
+    public void removeCourt(Guid courtId)
+    {
+        Court court = CourtList.FirstOrDefault(c => c.Id == courtId) ?? throw new Exception();
+        CourtList.Remove(court);
+    }
+
+    public void removePlayer(Guid playerId)
+    {
+        Player player = PlayerList.FirstOrDefault(p => p.Id == playerId) ?? throw new Exception();
+        PlayerList.Remove(player);
+    }
+
+    public void insertTestData()
+    {
+        PlayerList.Clear();
+        addTestPlayer("Axel");
+        addTestPlayer("Siri");
+        addTestPlayer("Joel");
+        addTestPlayer("Vivi");
+        addTestPlayer("Bhavna");
+        addTestPlayer("Lejla");
+        addTestPlayer("Daniel");
+        addTestPlayer("Simon");
+
+        CourtList.Clear();
+        CourtList.Add(new Court { Name = "1" });
+        CourtList.Add(new Court { Name = "2" });
+
+        PlayerListJson = JsonSerializer.Serialize(PlayerList);
+        CourtListJson = JsonSerializer.Serialize(CourtList);
+    }
+
+    private void addTestPlayer(string playerName)
+    {
+        if (playerName != null)
+        {
+            Player tmp = new Player { Name = playerName };
+            PlayerList.Add(tmp);
+            PlayerListJson = JsonSerializer.Serialize(PlayerList);
+        }
+    }
+}

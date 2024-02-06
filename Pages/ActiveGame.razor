@@ -1,0 +1,130 @@
+﻿@page "/activegame/{playerlist}/{courtlist}"
+@using Mexicano.Mexicano
+@using System.Text.Json;
+@using MexicanoFrontend.Models
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+
+<h3>ActiveGame</h3>
+
+<div class="container">
+
+    <div class="row">
+        @if (CourtList != null && PlayerList != null)
+
+            @foreach (Court court in CourtList)
+            {
+                {
+                    <div class="row">
+                        @if (court.GetPlayers() != null)
+                        {
+                            <div class="col">
+                                @court.GetPlayers().ElementAt(0).Name and1 @court.GetPlayers().ElementAt(1).Name <input @bind="court.GetPlayers().ElementAt(0).Points" type="number">
+                            </div>
+                            <div class="col">
+                                <img src="images/padel_court.png" />
+                            </div>
+                            <div class="col">
+                                @court.GetPlayers().ElementAt(2).Name and2 @court.GetPlayers().ElementAt(3).Name <input @bind="court.GetPlayers().ElementAt(2).Points" type="number">
+                            </div>
+                            <hr />
+                        }
+                    </div>
+
+                }
+
+            }
+    </div>
+    <div class="row">
+        <button @onclick="newRound">New Round</button>
+    </div>
+    <div id="standing" class="row">
+        @if(PlayerRankingList != null)
+        {
+            @foreach (Player p in PlayerRankingList!)
+            {
+                <div class="row">
+                    <div class="col">
+                        @p.Name
+                    </div>
+                    <div class="col">
+                        @p.Points
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>Something went wrong! Player ranking list is null</p>
+        }
+
+    </div>
+    <div class="row">
+        <button @onclick="showStandings">Show Standings</button>
+    </div>
+
+</div>
+
+
+@code {
+    [Parameter]
+    public String playerlist { get; set; } = String.Empty;
+    [Parameter]
+    public String courtlist { get; set; } = String.Empty;
+
+    public List<Court>? CourtList { get; set; }
+    public List<Player>? PlayerList { get; set; }
+
+    public List<Player>? PlayerRankingList { get; set; }
+
+    protected override void OnParametersSet()
+    {
+        CourtList = JsonSerializer.Deserialize<List<Court>>(courtlist);
+        PlayerList = JsonSerializer.Deserialize<List<Player>>(playerlist);
+
+        // Add 4 players to each court
+        if (CourtList != null && PlayerList != null)
+        {
+            for (int i = 0; i < CourtList.Count; i++)
+            {
+                for (int j = 0; j < 4; j++)
+                {
+                    CourtList.ElementAt(i).AddPlayersToCourt(PlayerList.ElementAt(j + i * 4).CopyPlayer());
+                }
+            }
+            PlayerRankingList = PlayerList.OrderByDescending(p => p.Points).ToList();
+
+        }
+
+    }
+
+    public void newRound()
+    {
+        List<Player> newPlayerList = new List<Player>();
+        foreach (Court court in CourtList!)
+        {
+            court.GetPlayers().ElementAt(1).Points = court.GetPlayers().ElementAt(0).Points;
+            court.GetPlayers().ElementAt(3).Points = court.GetPlayers().ElementAt(2).Points;
+            foreach (Player p in court.GetPlayers())
+            {
+                newPlayerList.Add(p);
+            }
+
+        }
+
+        for (int i = 0; i < PlayerList!.Count; i++)
+        {
+            PlayerList.ElementAt(i).Points += newPlayerList.ElementAt(i).Points;
+        }
+
+        String playerListJson = JsonSerializer.Serialize(PlayerList);
+        playerListJson = MexicanoInterface.StartNewRound(playerListJson);
+        String courtListJson = JsonSerializer.Serialize(CourtList);
+        navigationManager.NavigateTo($"/activegame/{playerListJson}/{courtListJson}");
+
+    }
+
+    public void showStandings()
+    {
+
+    }
+}
