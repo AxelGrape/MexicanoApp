@@ -1,0 +1,9 @@
+﻿body {
+}
+
+.padel_court {
+    background-image: url("../../images/padel_court.png");
+    width: 563px;
+    height: 279px;
+    margin: 50px 25px 50px 25px;
+}

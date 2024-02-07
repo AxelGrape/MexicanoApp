@@ -4,6 +4,8 @@
 @using MexicanoFrontend.Models
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
+<link rel="stylesheet" href="css/ActiveGame/StyleSheet.css">
+
 <h3>ActiveGame</h3>
 
 <div class="container">
@@ -14,14 +16,11 @@
             @foreach (Court court in CourtList)
             {
                 {
-                    <div class="row">
+                    <div class="row padel_court">
                         @if (court.GetPlayers() != null)
                         {
                             <div class="col">
                                 @court.GetPlayers().ElementAt(0).Name and1 @court.GetPlayers().ElementAt(1).Name <input @bind="court.GetPlayers().ElementAt(0).Points" type="number">
-                            </div>
-                            <div class="col">
-                                <img src="images/padel_court.png" />
                             </div>
                             <div class="col">
                                 @court.GetPlayers().ElementAt(2).Name and2 @court.GetPlayers().ElementAt(3).Name <input @bind="court.GetPlayers().ElementAt(2).Points" type="number">
