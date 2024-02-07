@@ -1,9 +1,40 @@
 ﻿body {
 }
 
+input {
+    background-color: #d1d1d1;
+    border-radius: 50%;
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    text-align: center;
+}
+
 .padel_court {
     background-image: url("../../images/padel_court.png");
     width: 563px;
     height: 279px;
     margin: 50px 25px 50px 25px;
+    align-content: center;
+}
+
+
+.padel_court_score_input {
+    width: 120px;
+    height: 60px;
+    align-content: center;
+    text-align: center;
+}
+
+
+.padel_court_player_name {
+    text-align: center;
+    align-content: center;
+    display: inline-block;
+    margin: 10px 10px 10px 10px;
+}
+
+.padel_court_player_name, p {
+    width: auto;
+    background-color: green;
 }

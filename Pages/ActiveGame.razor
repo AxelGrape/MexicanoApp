@@ -19,11 +19,28 @@
                     <div class="row padel_court">
                         @if (court.GetPlayers() != null)
                         {
+
                             <div class="col">
-                                @court.GetPlayers().ElementAt(0).Name and1 @court.GetPlayers().ElementAt(1).Name <input @bind="court.GetPlayers().ElementAt(0).Points" type="number">
+                                <div class="row padel_court_player_name">
+                                    <p>@court.GetPlayers().ElementAt(0).Name</p>
+                                </div>
+                                <div class="row padel_court_score_input">
+                                    <input @bind="court.GetPlayers().ElementAt(0).Points" type="number">
+                                </div>
+                                <div class="row padel_court_player_name">
+                                    <p>@court.GetPlayers().ElementAt(2).Name</p>
+                                </div>
                             </div>
                             <div class="col">
-                                @court.GetPlayers().ElementAt(2).Name and2 @court.GetPlayers().ElementAt(3).Name <input @bind="court.GetPlayers().ElementAt(2).Points" type="number">
+                                <div class="row padel_court_player_name">
+                                    <p>@court.GetPlayers().ElementAt(1).Name</p>
+                                </div>
+                                <div class="row padel_court_score_input">
+                                    <input @bind="court.GetPlayers().ElementAt(2).Points" type="number">
+                                </div>
+                                <div class="row padel_court_player_name">
+                                    <p>@court.GetPlayers().ElementAt(3).Name</p>
+                                </div>
                             </div>
                             <hr />
                         }
