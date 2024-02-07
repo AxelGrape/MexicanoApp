@@ -31,10 +31,17 @@ input {
     text-align: center;
     align-content: center;
     display: inline-block;
-    margin: 10px 10px 10px 10px;
+    border-radius: 10px;
+    min-width: 50px;
+    background-color: black;
+    padding: 5px 5px 0px 5px;
+    margin: 5px 5px 5px 5px;
+    opacity: 0.6;
+    width: 100px;
 }
 
 .padel_court_player_name, p {
     width: auto;
-    background-color: green;
+    color: white;
+
 }

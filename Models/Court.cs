@@ -4,7 +4,7 @@
 
     public class Court
     {
-        public Guid Id { get; set; } = new Guid();
+        public Guid Id { get; set; } = Guid.NewGuid();
         public string Name { get; set; } = string.Empty;
 
         private List<Player> Players = new List<Player>();  

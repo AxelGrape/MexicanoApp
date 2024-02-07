@@ -3,6 +3,7 @@
 @using System.Text.Json;
 @using Mexicano.Mexicano;
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+<link rel="stylesheet" href="css/StartPage/StyleSheet.css">
 
 
 <h3>StartPage</h3>
@@ -11,11 +12,14 @@
     <div class="row">
 
         <div id="player" class="col">
+            <div class="row">
             <EditForm Model="@Player" OnSubmit=@addPlayer>
                 <InputText placeholder="Add Player " @bind-Value="Player!.Name" required />
-                <button type="submit">Add</button>
+                <button class="btn btn-primary" type="submit">Add</button>
+                    
             </EditForm>
-            <p>Players: @PlayerList.Count</p>
+            </div>
+            <h6>Players: @PlayerList.Count</h6>
 
             <div class="row">
                 <div class="col">
@@ -25,19 +29,19 @@
             </div>
             @foreach (Player p in PlayerList!)
             {
-                <div class="row">
+                <div class="row player_list_row">
                     <div class="col">@p.Name</div>
-                    <div class="col"><button @onclick="() => removePlayer(p.Id)">Remove</button></div>
+                    <div class="col"><button class="btn btn-danger btn-sm" @onclick="() => removePlayer(p.Id)">Remove</button></div>
                 </div>
             }
         </div>
 
         <div id="court" class="col">
             <EditForm Model="@Court" OnSubmit=@addCourt>
-                <InputText placeholder="Add Court " @bind-Value="Court!.Name" required />
-                <button type="submit">Add</button>
+                <InputText class="form-control" placeholder="Add Court " @bind-Value="Court!.Name" required />
+                <button class="btn btn-primary" type="submit">Add</button>
             </EditForm>
-            <p>Courts: @CourtList.Count</p>
+            <h6>Courts: @CourtList.Count</h6>
             <div class="row">
                 <div class="col">
                     <h5>Court Name</h5>
@@ -46,17 +50,16 @@
             </div>
             @foreach (Court c in CourtList!)
             {
-                <div class="row">
+                <div class="row player_list_row">
                     <div class="col">@c.Name</div>
-                    <div class="col"><button @onclick="() => removeCourt(c.Id)">Remove</button></div>
+                    <div class="col"><button class="btn btn-danger btn-sm" @onclick="() => removeCourt(c.Id)">Remove</button></div>
                 </div>
             }
         </div>
 
     </div>
     <button @onclick="insertTestData">Use test data</button>
-    <button @onclick="startGame">Start Game</button>
-    <p>@startField</p>
+    <button class="btn btn-primary" @onclick="startGame">Start Game</button>
 
 </div>
 
