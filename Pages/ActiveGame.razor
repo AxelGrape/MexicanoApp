@@ -10,24 +10,22 @@
 
 <div class="container">
 
-    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
-        Launch demo modal
-    </button>
-
     <!-- Modal -->
     <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-        <div class="modal-dialog" role="document">
+        <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Set score</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
                 </div>
                 <div class="modal-body">
-                    ...
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Save changes</button>
+                    @for (int i = 0; i <= pointsPerGame; i++)
+                    {
+                        int tmp = i;
+                        <button type="button" @onclick="() => UpdatePlayerScore(tmp)" class="btn btn-primary popup-score-btn" data-toggle="modal" data-target="#myModal">
+                            @i
+                        </button>
+                    }
                 </div>
             </div>
         </div>
@@ -44,37 +42,45 @@
                         {
 
                             <div class="col">
-                                <div class="row itemsinstuff">
+                                <div class="row ">
                                     <div class="col-3"></div>
-                                    <div class="col-6"> <p>@court.GetPlayers().ElementAt(0).Name</p></div>
+                                    <div class="col-6"> <p class="player_name">@court.GetPlayers().ElementAt(0).Name</p></div>
                                     <div class="col-3"></div>
-                                   
+
                                 </div>
-                                <div class="row itemsinstuff">
+                                <div class="row team_points">
                                     <div class="col-3"></div>
-                                    <div class="col-6"><input @bind="court.GetPlayers().ElementAt(0).Points" type="number"></div>
+                                    <div class="col-6 text-center">
+                                        <button type="button" @onclick="() => setActivePlayer(court.GetPlayers().ElementAt(0), court.GetPlayers().ElementAt(2))" class="btn btn-danger set-score-btn" data-toggle="modal" data-target="#myModal">
+                                            @court.GetPlayers().ElementAt(0).Points
+                                        </button>
+                                    </div>
                                     <div class="col-3"></div>
                                 </div>
-                                <div class="row itemsinstuff">
+                                <div class="row ">
                                     <div class="col-3"></div>
-                                    <div class="col-6"><p>@court.GetPlayers().ElementAt(1).Name</p></div>
+                                    <div class="col-6"><p class="player_name">@court.GetPlayers().ElementAt(1).Name</p></div>
                                     <div class="col-3"></div>
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="row itemsinstuff">
+                                <div class="row ">
                                     <div class="col-3"></div>
-                                    <div class="col-6"><p>@court.GetPlayers().ElementAt(2).Name</p></div>
-                                    <div class="col-3"></div>
-                                </div>
-                                <div class="row itemsinstuff">
-                                    <div class="col-3"></div>
-                                    <div class="col-6"><input @bind="court.GetPlayers().ElementAt(0).Points" type="number"></div>
+                                    <div class="col-6"><p class="player_name">@court.GetPlayers().ElementAt(2).Name</p></div>
                                     <div class="col-3"></div>
                                 </div>
-                                <div class="row itemsinstuff">
+                                <div class="row team_points">
                                     <div class="col-3"></div>
-                                    <div class="col-6"><p>@court.GetPlayers().ElementAt(3).Name</p></div>
+                                    <div class="col-6 text-center">
+                                        <button type="button" @onclick="() => setActivePlayer(court.GetPlayers().ElementAt(2), court.GetPlayers().ElementAt(0))" class="btn btn-danger set-score-btn" data-toggle="modal" data-target="#myModal">
+                                            @court.GetPlayers().ElementAt(2).Points
+                                        </button>
+                                    </div>
+                                    <div class="col-3"></div>
+                                </div>
+                                <div class="row ">
+                                    <div class="col-3"></div>
+                                    <div class="col-6"><p class="player_name">@court.GetPlayers().ElementAt(3).Name</p></div>
                                     <div class="col-3"></div>
                                 </div>
                             </div>
@@ -90,7 +96,7 @@
         <button @onclick="newRound">New Round</button>
     </div>
     <div id="standing" class="row">
-        @if(PlayerRankingList != null)
+        @if (PlayerRankingList != null)
         {
             @foreach (Player p in PlayerRankingList!)
             {
@@ -128,6 +134,14 @@
 
     public List<Player>? PlayerRankingList { get; set; }
 
+
+    public int pointsPerGame = 11;
+
+    public Player? activePlayer;
+    public Player? activeEnemy;
+
+
+
     protected override void OnParametersSet()
     {
         CourtList = JsonSerializer.Deserialize<List<Court>>(courtlist);
@@ -147,6 +161,12 @@
 
         }
 
+    }
+
+    public void setActivePlayer(Player p, Player enemy)
+    {
+        activePlayer = p;
+        activeEnemy = enemy;
     }
 
     public void newRound()
@@ -173,6 +193,17 @@
         String courtListJson = JsonSerializer.Serialize(CourtList);
         navigationManager.NavigateTo($"/activegame/{playerListJson}/{courtListJson}");
 
+    }
+
+    public void UpdatePlayerScore(int score)
+    {
+        if (activePlayer == null || activeEnemy == null)
+            return;
+        if (pointsPerGame <= 0 || pointsPerGame < score)
+            return;
+
+        activePlayer.Points = score;
+        activeEnemy.Points = pointsPerGame - score;
     }
 
     public void showStandings()
