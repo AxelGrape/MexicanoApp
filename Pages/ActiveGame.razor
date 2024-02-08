@@ -10,6 +10,29 @@
 
 <div class="container">
 
+    <button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+        Launch demo modal
+    </button>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+                </div>
+                <div class="modal-body">
+                    ...
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary">Save changes</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div class="row">
         @if (CourtList != null && PlayerList != null)
 
@@ -21,25 +44,38 @@
                         {
 
                             <div class="col">
-                                <div class="row padel_court_player_name">
-                                    <p>@court.GetPlayers().ElementAt(0).Name</p>
+                                <div class="row itemsinstuff">
+                                    <div class="col-3"></div>
+                                    <div class="col-6"> <p>@court.GetPlayers().ElementAt(0).Name</p></div>
+                                    <div class="col-3"></div>
+                                   
                                 </div>
-                                <div class="row padel_court_score_input">
-                                    <input @bind="court.GetPlayers().ElementAt(0).Points" type="number">
+                                <div class="row itemsinstuff">
+                                    <div class="col-3"></div>
+                                    <div class="col-6"><input @bind="court.GetPlayers().ElementAt(0).Points" type="number"></div>
+                                    <div class="col-3"></div>
                                 </div>
-                                <div class="row padel_court_player_name">
-                                    <p>@court.GetPlayers().ElementAt(1).Name</p>
+                                <div class="row itemsinstuff">
+                                    <div class="col-3"></div>
+                                    <div class="col-6"><p>@court.GetPlayers().ElementAt(1).Name</p></div>
+                                    <div class="col-3"></div>
                                 </div>
                             </div>
                             <div class="col">
-                                <div class="row padel_court_player_name">
-                                    <p>@court.GetPlayers().ElementAt(2).Name</p>
+                                <div class="row itemsinstuff">
+                                    <div class="col-3"></div>
+                                    <div class="col-6"><p>@court.GetPlayers().ElementAt(2).Name</p></div>
+                                    <div class="col-3"></div>
                                 </div>
-                                <div class="row padel_court_score_input">
-                                    <input @bind="court.GetPlayers().ElementAt(2).Points" type="number">
+                                <div class="row itemsinstuff">
+                                    <div class="col-3"></div>
+                                    <div class="col-6"><input @bind="court.GetPlayers().ElementAt(0).Points" type="number"></div>
+                                    <div class="col-3"></div>
                                 </div>
-                                <div class="row padel_court_player_name">
-                                    <p>@court.GetPlayers().ElementAt(3).Name</p>
+                                <div class="row itemsinstuff">
+                                    <div class="col-3"></div>
+                                    <div class="col-6"><p>@court.GetPlayers().ElementAt(3).Name</p></div>
+                                    <div class="col-3"></div>
                                 </div>
                             </div>
                             <hr />
