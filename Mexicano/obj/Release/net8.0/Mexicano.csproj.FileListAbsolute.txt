@@ -1,0 +1,11 @@
+C:\Users\axepet\source\repos\Mexicano\bin\Release\net8.0\Mexicano.deps.json
+C:\Users\axepet\source\repos\Mexicano\bin\Release\net8.0\Mexicano.dll
+C:\Users\axepet\source\repos\Mexicano\bin\Release\net8.0\Mexicano.pdb
+C:\Users\axepet\source\repos\Mexicano\obj\Release\net8.0\Mexicano.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\axepet\source\repos\Mexicano\obj\Release\net8.0\Mexicano.AssemblyInfoInputs.cache
+C:\Users\axepet\source\repos\Mexicano\obj\Release\net8.0\Mexicano.AssemblyInfo.cs
+C:\Users\axepet\source\repos\Mexicano\obj\Release\net8.0\Mexicano.csproj.CoreCompileInputs.cache
+C:\Users\axepet\source\repos\Mexicano\obj\Release\net8.0\Mexicano.dll
+C:\Users\axepet\source\repos\Mexicano\obj\Release\net8.0\refint\Mexicano.dll
+C:\Users\axepet\source\repos\Mexicano\obj\Release\net8.0\Mexicano.pdb
+C:\Users\axepet\source\repos\Mexicano\obj\Release\net8.0\ref\Mexicano.dll
