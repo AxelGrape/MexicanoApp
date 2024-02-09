@@ -3,6 +3,8 @@
 @using System.Text.Json;
 @using MexicanoFrontend.Models
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IModalService modal
+
 
 <link rel="stylesheet" href="css/ActiveGame/StyleSheet.css">
 
@@ -11,18 +13,18 @@
 <div class="container">
 
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="setScoreModal" tabindex="-1" role="dialog" aria-labelledby="setScoreModalLabel">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 class="modal-title" id="myModalLabel">Set score</h4>
+                    <h4 class="modal-title" id="setScoreModalLabel">Set score</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
                 </div>
                 <div class="modal-body">
                     @for (int i = 0; i <= pointsPerGame; i++)
                     {
                         int tmp = i;
-                        <button type="button" @onclick="() => UpdatePlayerScore(tmp)" class="btn btn-primary popup-score-btn" data-toggle="modal" data-target="#myModal">
+                        <button type="button" @onclick="() => UpdatePlayerScore(tmp)" class="btn btn-primary popup-score-btn" data-toggle="modal" data-target="#setScoreModal">
                             @i
                         </button>
                     }
@@ -30,6 +32,7 @@
             </div>
         </div>
     </div>
+
 
     <div class="row">
         @if (CourtList != null && PlayerList != null)
@@ -51,7 +54,7 @@
                                 <div class="row team_points">
                                     <div class="col-3"></div>
                                     <div class="col-6 text-center">
-                                        <button type="button" @onclick="() => setActivePlayer(court.GetPlayers().ElementAt(0), court.GetPlayers().ElementAt(2))" class="btn btn-danger set-score-btn" data-toggle="modal" data-target="#myModal">
+                                        <button type="button" @onclick="() => setActivePlayer(court.GetPlayers().ElementAt(0), court.GetPlayers().ElementAt(2))" class="btn btn-danger set-score-btn" data-toggle="modal" data-target="#setScoreModal">
                                             @court.GetPlayers().ElementAt(0).Points
                                         </button>
                                     </div>
@@ -72,7 +75,7 @@
                                 <div class="row team_points">
                                     <div class="col-3"></div>
                                     <div class="col-6 text-center">
-                                        <button type="button" @onclick="() => setActivePlayer(court.GetPlayers().ElementAt(2), court.GetPlayers().ElementAt(0))" class="btn btn-danger set-score-btn" data-toggle="modal" data-target="#myModal">
+                                        <button type="button" @onclick="() => setActivePlayer(court.GetPlayers().ElementAt(2), court.GetPlayers().ElementAt(0))" class="btn btn-danger set-score-btn" data-toggle="modal" data-target="#setScoreModal">
                                             @court.GetPlayers().ElementAt(2).Points
                                         </button>
                                     </div>
@@ -95,33 +98,13 @@
     <div class="row">
         <button @onclick="newRound">New Round</button>
     </div>
-    <div id="standing" class="row">
-        @if (PlayerRankingList != null)
-        {
-            @foreach (Player p in PlayerRankingList!)
-            {
-                <div class="row">
-                    <div class="col">
-                        @p.Name
-                    </div>
-                    <div class="col">
-                        @p.Points
-                    </div>
-                </div>
-            }
-        }
-        else
-        {
-            <p>Something went wrong! Player ranking list is null</p>
-        }
-
-    </div>
     <div class="row">
-        <button @onclick="showStandings">Show Standings</button>
+        <Button Color="ButtonColor.Primary" @onclick="showStandings">Show Standing</Button>
     </div>
 
 </div>
 
+<script src="_content/Blazored.Modal/blazored.modal.js"></script>
 
 @code {
     [Parameter]
@@ -208,6 +191,9 @@
 
     public void showStandings()
     {
-
+        ModalParameters parameters = new ModalParameters();
+        parameters.Add("playerRankingList", JsonSerializer.Serialize(PlayerRankingList));
+        modal.Show<ShowStanding>(title: "Current Standing", parameters: parameters);
     }
+
 }

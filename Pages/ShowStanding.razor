@@ -1,0 +1,55 @@
+﻿@page "/showstanding/{playerRankingList}"
+@using Mexicano.Mexicano
+@using System.Text.Json;
+@inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+
+<h3>ShowStanding</h3>
+
+@if (PlayerRankingList != null)
+{
+
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">Name</th>
+                <th scope="col">Score</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (Player p in PlayerRankingList!)
+            {
+                <tr>
+                    <th scope="row">@rowCounter</th>
+                    <td>@p.Name</td>
+                    <td>@p.Points</td>
+                </tr>
+                rowCounter += 1;
+            }
+        </tbody>
+    </table>
+}
+else
+{
+    <p>Something went wrong! Player ranking list is null</p>
+}
+
+@code {
+
+    [Parameter]
+    public String playerRankingList { get; set; } = String.Empty;
+
+    public List<Player>? PlayerRankingList { get; set; }
+
+    public int rowCounter = 1;
+
+    protected override void OnParametersSet()
+    {
+        if(playerRankingList != String.Empty && playerRankingList !=null)
+        {
+            PlayerRankingList = JsonSerializer.Deserialize<List<Player>>(playerRankingList);
+        }
+
+    }
+}
