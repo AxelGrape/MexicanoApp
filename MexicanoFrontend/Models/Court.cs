@@ -14,6 +14,12 @@
             return Players;
         }    
 
+        public bool ClearPlayers()
+        {
+			Players.Clear();
+			return true;
+		}
+
         public bool AddPlayersToCourt(Player p)
         {
             if(Players.Count < 4)

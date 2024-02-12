@@ -80,16 +80,15 @@
 
     protected Player? Player { get; set; }
 
-    private int pointsPerGame;
-    private int PointsPerGame
-    {
-        get { return pointsPerGame; }
-        set
-        {
-            pointsPerGame = value;
-            SetPointsPerGame();
-        }
-    }
+	private int pointsPerGame;
+	private int PointsPerGame
+	{
+		get { return pointsPerGame; }
+		set
+		{
+			pointsPerGame = value;
+		}
+	}
 
     protected override void OnInitialized()
     {
@@ -145,7 +144,7 @@
 
     public String startField = "";
 
-    public void startGame()
+    public async void startGame()
     {
         if (!verifyPlayerAndCourtCount())
         {
@@ -165,10 +164,11 @@
             return;
         }
 
-        SetPointsPerGame();
+        
         startField = MexicanoInterface.StartMexicano(JsonSerializer.Serialize(PlayerList));
         CourtListJson = JsonSerializer.Serialize(CourtList);
-        navigationManager.NavigateTo($"/activegame/{startField}/{CourtListJson}");
+        await SetSessionVariables();
+        navigationManager.NavigateTo($"/activegame");
 
     }
 
@@ -184,10 +184,21 @@
         PlayerList.Remove(player);
     }
 
-    public async void SetPointsPerGame()
-    {
-        await sessionStorage.SetItemAsync("PointsPerGame", PointsPerGame);
-    }
+	private async Task SetSessionVariables()
+	{
+		var task1 = sessionStorage.SetItemAsync("PlayerListJson", startField);
+		var task2 = sessionStorage.SetItemAsync("CourtListJson", CourtListJson);
+		var task3 = sessionStorage.SetItemAsync("PointsPerGame", PointsPerGame);
+
+		await task1;
+		await task2;
+		await task3;
+	}
+
+	public async void SetPointsPerGame()
+	{
+		await sessionStorage.SetItemAsync("PointsPerGame", PointsPerGame);
+	}
 
 
     public void insertTestData()
