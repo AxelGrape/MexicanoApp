@@ -87,7 +87,6 @@
 		set
 		{
 			pointsPerGame = value;
-			SetPointsPerGame();
 		}
 	}
 
@@ -145,16 +144,16 @@
 
 	public String startField = "";
 
-	public void startGame()
+	public async void startGame()
 	{
 		if (!verifyPlayerAndCourtCount())
 		{
 			return;
 		}
-		SetPointsPerGame();
 		startField = MexicanoInterface.StartMexicano(JsonSerializer.Serialize(PlayerList));
 		CourtListJson = JsonSerializer.Serialize(CourtList);
-		navigationManager.NavigateTo($"/activegame/{startField}/{CourtListJson}");
+		await SetSessionVariables();
+		navigationManager.NavigateTo($"/activegame");
 
 	}
 
@@ -168,6 +167,17 @@
 	{
 		Player player = PlayerList.FirstOrDefault(p => p.Id == playerId) ?? throw new Exception();
 		PlayerList.Remove(player);
+	}
+
+	private async Task SetSessionVariables()
+	{
+		var task1 = sessionStorage.SetItemAsync("PlayerListJson", startField);
+		var task2 = sessionStorage.SetItemAsync("CourtListJson", CourtListJson);
+		var task3 = sessionStorage.SetItemAsync("PointsPerGame", PointsPerGame);
+
+		await task1;
+		await task2;
+		await task3;
 	}
 
 	public async void SetPointsPerGame()

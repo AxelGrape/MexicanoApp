@@ -1,4 +1,4 @@
-﻿@page "/activegame/{playerlist}/{courtlist}"
+﻿@page "/activegame"
 @using Mexicano.Mexicano
 @using Services
 @using System.Text.Json;
@@ -15,190 +15,213 @@
 
 <div class="container">
 
-    <div class="row">
-        @if (CourtList != null && PlayerList != null)
+	<div class="row">
+		@if (CourtList != null && PlayerList != null)
 
-            @foreach (Court court in CourtList)
-            {
-                {
-                    <div class="row padel_court">
-                        @if (court.GetPlayers() != null)
-                        {
+			@foreach (Court court in CourtList)
+			{
+				{
+					<div class="row padel_court">
+						@if (court.GetPlayers() != null)
+						{
 
-                            <div class="col">
-                                <div class="row ">
-                                    <div class="col-3"></div>
-                                    <div class="col-6"> <p class="player_name">@court.GetPlayers().ElementAt(0).Name</p></div>
-                                    <div class="col-3"></div>
+							<div class="col">
+								<div class="row ">
+									<div class="col-3"></div>
+									<div class="col-6"> <p class="player_name">@court.GetPlayers().ElementAt(0).Name</p></div>
+									<div class="col-3"></div>
 
-                                </div>
-                                <div class="row team_points">
-                                    <div class="col-3"></div>
-                                    <div class="col-6 text-center">
-                                        <Button class="btn btn-danger set-score-btn" @onclick="() => showSetScore(court.GetPlayers().ElementAt(0), court.GetPlayers().ElementAt(2))">@court.GetPlayers().ElementAt(0).Points</Button>
-                                    </div>
-                                    <div class="col-3"></div>
-                                </div>
-                                <div class="row ">
-                                    <div class="col-3"></div>
-                                    <div class="col-6"><p class="player_name">@court.GetPlayers().ElementAt(1).Name</p></div>
-                                    <div class="col-3"></div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="row ">
-                                    <div class="col-3"></div>
-                                    <div class="col-6"><p class="player_name">@court.GetPlayers().ElementAt(2).Name</p></div>
-                                    <div class="col-3"></div>
-                                </div>
-                                <div class="row team_points">
-                                    <div class="col-3"></div>
-                                    <div class="col-6 text-center">
-                                        <Button class="btn btn-danger set-score-btn" @onclick="() => showSetScore(court.GetPlayers().ElementAt(2), court.GetPlayers().ElementAt(0))">@court.GetPlayers().ElementAt(2).Points</Button>
-                                    </div>
-                                    <div class="col-3"></div>
-                                </div>
-                                <div class="row ">
-                                    <div class="col-3"></div>
-                                    <div class="col-6"><p class="player_name">@court.GetPlayers().ElementAt(3).Name</p></div>
-                                    <div class="col-3"></div>
-                                </div>
-                            </div>
-                            <hr />
-                        }
-                    </div>
+								</div>
+								<div class="row team_points">
+									<div class="col-3"></div>
+									<div class="col-6 text-center">
+										<Button class="btn btn-danger set-score-btn" @onclick="() => showSetScore(court.GetPlayers().ElementAt(0), court.GetPlayers().ElementAt(2))">@court.GetPlayers().ElementAt(0).Points</Button>
+									</div>
+									<div class="col-3"></div>
+								</div>
+								<div class="row ">
+									<div class="col-3"></div>
+									<div class="col-6"><p class="player_name">@court.GetPlayers().ElementAt(1).Name</p></div>
+									<div class="col-3"></div>
+								</div>
+							</div>
+							<div class="col">
+								<div class="row ">
+									<div class="col-3"></div>
+									<div class="col-6"><p class="player_name">@court.GetPlayers().ElementAt(2).Name</p></div>
+									<div class="col-3"></div>
+								</div>
+								<div class="row team_points">
+									<div class="col-3"></div>
+									<div class="col-6 text-center">
+										<Button class="btn btn-danger set-score-btn" @onclick="() => showSetScore(court.GetPlayers().ElementAt(2), court.GetPlayers().ElementAt(0))">@court.GetPlayers().ElementAt(2).Points</Button>
+									</div>
+									<div class="col-3"></div>
+								</div>
+								<div class="row ">
+									<div class="col-3"></div>
+									<div class="col-6"><p class="player_name">@court.GetPlayers().ElementAt(3).Name</p></div>
+									<div class="col-3"></div>
+								</div>
+							</div>
+							<hr />
+						}
+					</div>
 
-                }
+				}
 
-            }
-    </div>
-    <div class="row">
-        <button @onclick="newRound">New Round</button>
-    </div>
-    <div class="row">
-        <Button Color="ButtonColor.Primary" @onclick="showStandings">Show Standing</Button>
-    </div>
+			}
+	</div>
+	<div class="row">
+		<button @onclick="newRound">New Round</button>
+	</div>
+	<div class="row">
+		<Button Color="ButtonColor.Primary" @onclick="showStandings">Show Standing</Button>
+	</div>
 
 </div>
 
 <script src="_content/Blazored.Modal/blazored.modal.js"></script>
 
 @code {
-    [Parameter]
-    public String playerlist { get; set; } = String.Empty;
-    [Parameter]
-    public String courtlist { get; set; } = String.Empty;
+	public List<Court>? CourtList { get; set; }
+	public List<Player>? PlayerList { get; set; }
 
-    public List<Court>? CourtList { get; set; }
-    public List<Player>? PlayerList { get; set; }
+	public List<Player>? PlayerRankingList { get; set; }
 
-    public List<Player>? PlayerRankingList { get; set; }
+	public int PointsPerGame { get; set; }
 
-    public int PointsPerGame { get; set; }   
-
-    public Player? activePlayer;
-    public Player? activeEnemy;
+	public Player? activePlayer;
+	public Player? activeEnemy;
 
 
-
-    protected override void OnParametersSet()
-    {
-        CourtList = JsonSerializer.Deserialize<List<Court>>(courtlist);
-        PlayerList = JsonSerializer.Deserialize<List<Player>>(playerlist);
-        UpdateFromSessionStorage();
-        refreshService.RefreshRequested += RefreshMe;
-        
-
-        // Add 4 players to each court
-        if (CourtList != null && PlayerList != null)
-        {
-            for (int i = 0; i < CourtList.Count; i++)
-            {
-                for (int j = 0; j < 4; j++)
-                {
-                    CourtList.ElementAt(i).AddPlayersToCourt(PlayerList.ElementAt(j + i * 4).CopyPlayer());
-                }
-            }
-            PlayerRankingList = PlayerList.OrderByDescending(p => p.Points).ToList();
-
-        }
-
-    }
-
-    public async void UpdateFromSessionStorage()
+	protected override async Task OnInitializedAsync()
 	{
-        PointsPerGame = await sessionStorage.GetItemAsync<int>("PointsPerGame");
+		await UpdateFromSessionStorage();
+		AddPlayersToCourt();
 	}
 
-    public void setActivePlayer(Player p, Player enemy)
-    {
-        activePlayer = p;
-        activeEnemy = enemy;
-    }
+	protected override void OnParametersSet()
+	{
+		refreshService.RefreshRequested += RefreshMe;
 
-    public void newRound()
-    {
-        List<Player> newPlayerList = new List<Player>();
-        foreach (Court court in CourtList!)
-        {
-            court.GetPlayers().ElementAt(1).Points = court.GetPlayers().ElementAt(0).Points;
-            court.GetPlayers().ElementAt(3).Points = court.GetPlayers().ElementAt(2).Points;
-            foreach (Player p in court.GetPlayers())
-            {
-                newPlayerList.Add(p);
-            }
+	}
 
-        }
+	private async void AddPlayersToCourt()
+	{
 
-        for (int i = 0; i < PlayerList!.Count; i++)
-        {
-            PlayerList.ElementAt(i).Points += newPlayerList.ElementAt(i).Points;
-        }
+		//Add 4 players to each court
+		if (CourtList != null && PlayerList != null)
+		{
+			for (int i = 0; i < CourtList.Count; i++)
+			{
+				CourtList.ElementAt(i).ClearPlayers();
+				for (int j = 0; j < 4; j++)
+				{
+					CourtList.ElementAt(i).AddPlayersToCourt(PlayerList.ElementAt(j + i * 4).CopyPlayer());
+				}
+			}
+			PlayerRankingList = PlayerList.OrderByDescending(p => p.Points).ToList();
+		}
+		await SetCourtListSessionVariable(JsonSerializer.Serialize(CourtList));
+	}
 
-        String playerListJson = JsonSerializer.Serialize(PlayerList);
-        playerListJson = MexicanoInterface.StartNewRound(playerListJson);
-        String courtListJson = JsonSerializer.Serialize(CourtList);
-        navigationManager.NavigateTo($"/activegame/{playerListJson}/{courtListJson}");
+	public async Task UpdateFromSessionStorage()
+	{
+		var courtlist = sessionStorage.GetItemAsync<string>("CourtListJson");
+		var playerlist = sessionStorage.GetItemAsync<string>("PlayerListJson");
+		CourtList = JsonSerializer.Deserialize<List<Court>>(await courtlist);
+		PlayerList = JsonSerializer.Deserialize<List<Player>>(await playerlist);
 
-    }
+		PointsPerGame = await sessionStorage.GetItemAsync<int>("PointsPerGame");
+	}
+	private async Task SetSessionVariables(string playerListJson, string courtListJson)
+	{
+		await SetCourtListSessionVariable(courtListJson);
+		await SetPlayerListSessionVariable(playerListJson);
+	}
+	private async Task SetCourtListSessionVariable(string courtListJson)
+	{
+		await sessionStorage.SetItemAsync("CourtListJson", courtListJson);
+	}
+	private async Task SetPlayerListSessionVariable(string playerListJson)
+	{
+		await sessionStorage.SetItemAsync("PlayerListJson", playerListJson);
+	}
 
-    public void UpdatePlayerScore(int score)
-    {
-        if (activePlayer == null || activeEnemy == null)
-            return;
-        if (PointsPerGame <= 0 || PointsPerGame < score)
-            return;
+	public void setActivePlayer(Player p, Player enemy)
+	{
+		activePlayer = p;
+		activeEnemy = enemy;
+	}
 
-        activePlayer.Points = score;
-        activeEnemy.Points = PointsPerGame - score;
-    }
+	public async void newRound()
+	{
+		List<Player> newPlayerList = new List<Player>();
+		foreach (Court court in CourtList!)
+		{
+			court.GetPlayers().ElementAt(1).Points = court.GetPlayers().ElementAt(0).Points;
+			court.GetPlayers().ElementAt(3).Points = court.GetPlayers().ElementAt(2).Points;
+			foreach (Player p in court.GetPlayers())
+			{
+				newPlayerList.Add(p);
+			}
+		}
 
-    public void showStandings()
-    {
-        ModalParameters parameters = new ModalParameters();
-        parameters.Add("playerRankingList", JsonSerializer.Serialize(PlayerRankingList));
-        modal.Show<ShowStanding>(title: "Current Standing", parameters: parameters);
-    }
+		for (int i = 0; i < PlayerList!.Count; i++)
+		{
+			PlayerList.ElementAt(i).Points += newPlayerList.ElementAt(i).Points;
+		}
 
-    public void showSetScore(Player p, Player opponent)
-    {
-        setActivePlayer(p, opponent);
-        setScore();
-    }
+		String playerListJson = JsonSerializer.Serialize(PlayerList);
+		playerListJson = MexicanoInterface.StartNewRound(playerListJson);
 
-    public void setScore()
-    {
-        if (activePlayer == null || activeEnemy == null)
-            return;
-        GameResult gameResult = new GameResult(activePlayer, activeEnemy, PointsPerGame);
-        ModalParameters parameters = new ModalParameters();
-        parameters.Add("gameresult", gameResult);
-        modal.Show<SetScore>(title: "Set Score", parameters: parameters);
-    }
+		PlayerList = JsonSerializer.Deserialize<List<Player>>(playerListJson);
+		await SetPlayerListSessionVariable(playerListJson);
+		AddPlayersToCourt();
+		RefreshMe();
+		//navigationManager.NavigateTo($"/activegame");
+	}
 
-    private void RefreshMe()
-    {
-        StateHasChanged();
-    }
+
+
+	public void UpdatePlayerScore(int score)
+	{
+		if (activePlayer == null || activeEnemy == null)
+			return;
+		if (PointsPerGame <= 0 || PointsPerGame < score)
+			return;
+
+		activePlayer.Points = score;
+		activeEnemy.Points = PointsPerGame - score;
+	}
+
+	public void showStandings()
+	{
+		ModalParameters parameters = new ModalParameters();
+		parameters.Add("playerRankingList", JsonSerializer.Serialize(PlayerRankingList));
+		modal.Show<ShowStanding>(title: "Current Standing", parameters: parameters);
+	}
+
+	public void showSetScore(Player p, Player opponent)
+	{
+		setActivePlayer(p, opponent);
+		setScore();
+	}
+
+	public void setScore()
+	{
+		if (activePlayer == null || activeEnemy == null)
+			return;
+		GameResult gameResult = new GameResult(activePlayer, activeEnemy, PointsPerGame);
+		ModalParameters parameters = new ModalParameters();
+		parameters.Add("gameresult", gameResult);
+		modal.Show<SetScore>(title: "Set Score", parameters: parameters);
+	}
+
+	private void RefreshMe()
+	{
+		StateHasChanged();
+	}
 
 }
