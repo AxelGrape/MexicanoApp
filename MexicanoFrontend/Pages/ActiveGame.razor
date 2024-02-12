@@ -1,9 +1,11 @@
 ﻿@page "/activegame/{playerlist}/{courtlist}"
 @using Mexicano.Mexicano
+@using Services
 @using System.Text.Json;
 @using MexicanoFrontend.Models
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IModalService modal
+@inject IRefreshService refreshService
 
 
 <link rel="stylesheet" href="css/ActiveGame/StyleSheet.css">
@@ -11,28 +13,6 @@
 <h3>ActiveGame</h3>
 
 <div class="container">
-
-    <!-- Modal -->
-    <div class="modal fade" id="setScoreModal" tabindex="-1" role="dialog" aria-labelledby="setScoreModalLabel">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="setScoreModalLabel">Set score</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                </div>
-                <div class="modal-body">
-                    @for (int i = 0; i <= pointsPerGame; i++)
-                    {
-                        int tmp = i;
-                        <button type="button" @onclick="() => UpdatePlayerScore(tmp)" class="btn btn-primary popup-score-btn" data-toggle="modal" data-target="#setScoreModal">
-                            @i
-                        </button>
-                    }
-                </div>
-            </div>
-        </div>
-    </div>
-
 
     <div class="row">
         @if (CourtList != null && PlayerList != null)
@@ -54,9 +34,7 @@
                                 <div class="row team_points">
                                     <div class="col-3"></div>
                                     <div class="col-6 text-center">
-                                        <button type="button" @onclick="() => setActivePlayer(court.GetPlayers().ElementAt(0), court.GetPlayers().ElementAt(2))" class="btn btn-danger set-score-btn" data-toggle="modal" data-target="#setScoreModal">
-                                            @court.GetPlayers().ElementAt(0).Points
-                                        </button>
+                                        <Button class="btn btn-danger set-score-btn" @onclick="() => showSetScore(court.GetPlayers().ElementAt(0), court.GetPlayers().ElementAt(2))">@court.GetPlayers().ElementAt(0).Points</Button>
                                     </div>
                                     <div class="col-3"></div>
                                 </div>
@@ -75,9 +53,7 @@
                                 <div class="row team_points">
                                     <div class="col-3"></div>
                                     <div class="col-6 text-center">
-                                        <button type="button" @onclick="() => setActivePlayer(court.GetPlayers().ElementAt(2), court.GetPlayers().ElementAt(0))" class="btn btn-danger set-score-btn" data-toggle="modal" data-target="#setScoreModal">
-                                            @court.GetPlayers().ElementAt(2).Points
-                                        </button>
+                                        <Button class="btn btn-danger set-score-btn" @onclick="() => showSetScore(court.GetPlayers().ElementAt(2), court.GetPlayers().ElementAt(0))">@court.GetPlayers().ElementAt(2).Points</Button>
                                     </div>
                                     <div class="col-3"></div>
                                 </div>
@@ -129,6 +105,8 @@
     {
         CourtList = JsonSerializer.Deserialize<List<Court>>(courtlist);
         PlayerList = JsonSerializer.Deserialize<List<Player>>(playerlist);
+        refreshService.RefreshRequested += RefreshMe;
+
 
         // Add 4 players to each court
         if (CourtList != null && PlayerList != null)
@@ -194,6 +172,27 @@
         ModalParameters parameters = new ModalParameters();
         parameters.Add("playerRankingList", JsonSerializer.Serialize(PlayerRankingList));
         modal.Show<ShowStanding>(title: "Current Standing", parameters: parameters);
+    }
+
+    public void showSetScore(Player p, Player opponent)
+    {
+        setActivePlayer(p, opponent);
+        setScore();
+    }
+
+    public void setScore()
+    {
+        if (activePlayer == null || activeEnemy == null)
+            return;
+        GameResult gameResult = new GameResult(activePlayer, activeEnemy, pointsPerGame);
+        ModalParameters parameters = new ModalParameters();
+        parameters.Add("gameresult", gameResult);
+        modal.Show<SetScore>(title: "Set Score", parameters: parameters);
+    }
+
+    private void RefreshMe()
+    {
+        StateHasChanged();
     }
 
 }
