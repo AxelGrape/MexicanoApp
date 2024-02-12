@@ -6,6 +6,7 @@
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IModalService modal
 @inject IRefreshService refreshService
+@inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 
 
 <link rel="stylesheet" href="css/ActiveGame/StyleSheet.css">
@@ -93,8 +94,7 @@
 
     public List<Player>? PlayerRankingList { get; set; }
 
-
-    public int pointsPerGame = 11;
+    public int PointsPerGame { get; set; }   
 
     public Player? activePlayer;
     public Player? activeEnemy;
@@ -105,8 +105,9 @@
     {
         CourtList = JsonSerializer.Deserialize<List<Court>>(courtlist);
         PlayerList = JsonSerializer.Deserialize<List<Player>>(playerlist);
+        UpdateFromSessionStorage();
         refreshService.RefreshRequested += RefreshMe;
-
+        
 
         // Add 4 players to each court
         if (CourtList != null && PlayerList != null)
@@ -123,6 +124,11 @@
         }
 
     }
+
+    public async void UpdateFromSessionStorage()
+	{
+        PointsPerGame = await sessionStorage.GetItemAsync<int>("PointsPerGame");
+	}
 
     public void setActivePlayer(Player p, Player enemy)
     {
@@ -160,11 +166,11 @@
     {
         if (activePlayer == null || activeEnemy == null)
             return;
-        if (pointsPerGame <= 0 || pointsPerGame < score)
+        if (PointsPerGame <= 0 || PointsPerGame < score)
             return;
 
         activePlayer.Points = score;
-        activeEnemy.Points = pointsPerGame - score;
+        activeEnemy.Points = PointsPerGame - score;
     }
 
     public void showStandings()
@@ -184,7 +190,7 @@
     {
         if (activePlayer == null || activeEnemy == null)
             return;
-        GameResult gameResult = new GameResult(activePlayer, activeEnemy, pointsPerGame);
+        GameResult gameResult = new GameResult(activePlayer, activeEnemy, PointsPerGame);
         ModalParameters parameters = new ModalParameters();
         parameters.Add("gameresult", gameResult);
         modal.Show<SetScore>(title: "Set Score", parameters: parameters);
