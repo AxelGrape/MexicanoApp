@@ -1,0 +1,12 @@
+﻿@page "/showerrormsg/{errormsg}"
+@using Models
+
+<h3> @errormsg!.Type</h3>
+<p>@errormsg.Msg</p>
+
+@code {
+
+    [Parameter]
+    public ErrorMsg? errormsg { get; set; }
+
+}

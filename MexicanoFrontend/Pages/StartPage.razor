@@ -3,82 +3,82 @@
 @using System.Text.Json;
 @using Mexicano.Mexicano;
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
+@inject IModalService modal
 @inject Blazored.SessionStorage.ISessionStorageService sessionStorage
 <link rel="stylesheet" href="css/StartPage/StyleSheet.css">
 
-
-<h3>StartPage</h3>
-
 <div id="wrapper" class="container">
 
-	<div class="row">
+    <div class="row">
+        <div id="player" class="col">
+            <div class="row">
+                <EditForm Model="@Player" OnSubmit=@addPlayer>
+                    <InputText placeholder="Add Player " @bind-Value="Player!.Name" required />
+                    <button class="btn btn-primary" type="submit">Add</button>
 
-		<EditForm Model="@PointsPerGame" OnSubmit=@SetPointsPerGame>
-			<InputNumber placeholder="Set game points " @bind-Value="PointsPerGame" required />
-		</EditForm>
+                </EditForm>
+            </div>
+            <h6>Players: @PlayerList.Count</h6>
 
-		<div id="player" class="col">
-			<div class="row">
-				<EditForm Model="@Player" OnSubmit=@addPlayer>
-					<InputText placeholder="Add Player " @bind-Value="Player!.Name" required />
-					<button class="btn btn-primary" type="submit">Add</button>
+            <div class="row">
+                <div class="col">
+                    <h5>Player Name</h5>
+                </div>
+                <div class="col"></div>
+            </div>
+            @foreach (Player p in PlayerList!)
+            {
+                <div class="row player_list_row">
+                    <div class="col">@p.Name</div>
+                    <div class="col"><button class="btn btn-danger btn-sm" @onclick="() => removePlayer(p.Id)">Remove</button></div>
+                </div>
+            }
+        </div>
 
-				</EditForm>
-			</div>
-			<h6>Players: @PlayerList.Count</h6>
+        <div id="court" class="col">
+            <EditForm Model="@Court" OnSubmit=@addCourt>
+                <InputText placeholder="Add Court " @bind-Value="Court!.Name" required />
+                <button class="btn btn-primary" type="submit">Add</button>
+            </EditForm>
+            <h6>Courts: @CourtList.Count</h6>
+            <div class="row">
+                <div class="col">
+                    <h5>Court Name</h5>
+                </div>
+                <div class="col"></div>
+            </div>
+            @foreach (Court c in CourtList!)
+            {
+                <div class="row player_list_row">
+                    <div class="col">@c.Name</div>
+                    <div class="col"><button class="btn btn-danger btn-sm" @onclick="() => removeCourt(c.Id)">Remove</button></div>
+                </div>
+            }
+        </div>
 
-			<div class="row">
-				<div class="col">
-					<h5>Player Name</h5>
-				</div>
-				<div class="col"></div>
-			</div>
-			@foreach (Player p in PlayerList!)
-			{
-				<div class="row player_list_row">
-					<div class="col">@p.Name</div>
-					<div class="col"><button class="btn btn-danger btn-sm" @onclick="() => removePlayer(p.Id)">Remove</button></div>
-				</div>
-			}
-		</div>
+        <div class="col">
+            <EditForm Model="@PointsPerGame" OnSubmit=@SetPointsPerGame>
+                <label for="pointspergame">Points: </label>
+                <InputNumber placeholder="Set game points " id="pointspergame" min="1" @bind-Value="PointsPerGame" required />
+            </EditForm>
+        </div>
 
-		<div id="court" class="col">
-			<EditForm Model="@Court" OnSubmit=@addCourt>
-				<InputText placeholder="Add Court " @bind-Value="Court!.Name" required />
-				<button class="btn btn-primary" type="submit">Add</button>
-			</EditForm>
-			<h6>Courts: @CourtList.Count</h6>
-			<div class="row">
-				<div class="col">
-					<h5>Court Name</h5>
-				</div>
-				<div class="col"></div>
-			</div>
-			@foreach (Court c in CourtList!)
-			{
-				<div class="row player_list_row">
-					<div class="col">@c.Name</div>
-					<div class="col"><button class="btn btn-danger btn-sm" @onclick="() => removeCourt(c.Id)">Remove</button></div>
-				</div>
-			}
-		</div>
-
-	</div>
-	<button @onclick="insertTestData">Use test data</button>
-	<button class="btn btn-primary" @onclick="startGame">Start Game</button>
+    </div>
+    <button @onclick="insertTestData">Use test data</button>
+    <button class="btn btn-primary" @onclick="startGame">Start Game</button>
 
 </div>
 
 @code
 {
 
-	public int MatchPoints = 0;
+    public int MatchPoints = 0;
 
-	private List<Player> PlayerList = new List<Player>();
+    private List<Player> PlayerList = new List<Player>();
 
-	public String PlayerListJson = "";
+    public String PlayerListJson = "";
 
-	protected Player? Player { get; set; }
+    protected Player? Player { get; set; }
 
 	private int pointsPerGame;
 	private int PointsPerGame
@@ -90,84 +90,99 @@
 		}
 	}
 
-	protected override void OnInitialized()
-	{
-		Player ??= new();
-		Court ??= new();
-	}
+    protected override void OnInitialized()
+    {
+        Player ??= new();
+        Court ??= new();
+    }
 
-	public void addPlayer()
-	{
+    public void addPlayer()
+    {
 
-		if (Player == null) return;
-		Player.Name = Player.Name.Trim();
-		if (Player.Name.Length == 0) return;
-		if (PlayerList.FirstOrDefault(p => p.Name == Player.Name) != null) return;
-
-
-		Player tmp = new Player { Name = Player.Name };
-		PlayerList.Add(tmp);
-		PlayerListJson = JsonSerializer.Serialize(PlayerList);
-		Player.Name = string.Empty;
+        if (Player == null) return;
+        Player.Name = Player.Name.Trim();
+        if (Player.Name.Length == 0) return;
+        if (PlayerList.FirstOrDefault(p => p.Name == Player.Name) != null) return;
 
 
-	}
-
-	private List<Court> CourtList = new List<Court>();
-
-	public String CourtListJson = "";
-
-	protected Court? Court { get; set; }
-
-	public void addCourt()
-	{
-
-		if (Court != null)
-		{
-			Court tmp = new Court { Name = Court.Name };
-			CourtList.Add(tmp);
-			CourtListJson = JsonSerializer.Serialize(CourtList);
-			Court.Name = string.Empty;
-		}
+        Player tmp = new Player { Name = Player.Name };
+        PlayerList.Add(tmp);
+        PlayerListJson = JsonSerializer.Serialize(PlayerList);
+        Player.Name = string.Empty;
 
 
-	}
+    }
 
-	private bool verifyPlayerAndCourtCount()
-	{
-		if (CourtList.Count != 0 && PlayerList.Count != 0 && CourtList.Count * 4 == PlayerList.Count)
-		{
-			return true;
-		}
-		return false;
-	}
+    private List<Court> CourtList = new List<Court>();
 
-	public String startField = "";
+    public String CourtListJson = "";
 
-	public async void startGame()
-	{
-		if (!verifyPlayerAndCourtCount())
-		{
-			return;
-		}
-		startField = MexicanoInterface.StartMexicano(JsonSerializer.Serialize(PlayerList));
-		CourtListJson = JsonSerializer.Serialize(CourtList);
-		await SetSessionVariables();
-		navigationManager.NavigateTo($"/activegame");
+    protected Court? Court { get; set; }
 
-	}
+    public void addCourt()
+    {
 
-	public void removeCourt(Guid courtId)
-	{
-		Court court = CourtList.FirstOrDefault(c => c.Id == courtId) ?? throw new Exception();
-		CourtList.Remove(court);
-	}
+        if (Court != null)
+        {
+            Court tmp = new Court { Name = Court.Name };
+            CourtList.Add(tmp);
+            CourtListJson = JsonSerializer.Serialize(CourtList);
+            Court.Name = string.Empty;
+        }
 
-	public void removePlayer(Guid playerId)
-	{
-		Player player = PlayerList.FirstOrDefault(p => p.Id == playerId) ?? throw new Exception();
-		PlayerList.Remove(player);
-	}
+
+    }
+
+    private bool verifyPlayerAndCourtCount()
+    {
+        if (CourtList.Count != 0 && PlayerList.Count != 0 && CourtList.Count * 4 == PlayerList.Count)
+        {
+            return true;
+        }
+        return false;
+    }
+
+    public String startField = "";
+
+    public void startGame()
+    {
+        if (!verifyPlayerAndCourtCount())
+        {
+            ErrorMsg errorMsg = new ErrorMsg("Validation Error", "The number of players and number of courts does not match");
+            ModalParameters parameters = new ModalParameters();
+            parameters.Add("errormsg", errorMsg);
+            modal.Show<ShowErrorMsg>(title: errorMsg.Type, parameters: parameters);
+            return;
+        }
+
+        if(PointsPerGame == 0)
+        {
+            ErrorMsg errorMsg = new ErrorMsg("Validation Error", "The number of points must be > 0");
+            ModalParameters parameters = new ModalParameters();
+            parameters.Add("errormsg", errorMsg);
+            modal.Show<ShowErrorMsg>(title: errorMsg.Type, parameters: parameters);
+            return;
+        }
+
+        
+        startField = MexicanoInterface.StartMexicano(JsonSerializer.Serialize(PlayerList));
+        CourtListJson = JsonSerializer.Serialize(CourtList);
+        await SetSessionVariables();
+        navigationManager.NavigateTo($"/activegame");
+
+    }
+
+    public void removeCourt(Guid courtId)
+    {
+        Court court = CourtList.FirstOrDefault(c => c.Id == courtId) ?? throw new Exception();
+        CourtList.Remove(court);
+    }
+
+    public void removePlayer(Guid playerId)
+    {
+        Player player = PlayerList.FirstOrDefault(p => p.Id == playerId) ?? throw new Exception();
+        PlayerList.Remove(player);
+    }
 
 	private async Task SetSessionVariables()
 	{
@@ -186,33 +201,33 @@
 	}
 
 
-	public void insertTestData()
-	{
-		PlayerList.Clear();
-		addTestPlayer("Axel");
-		addTestPlayer("Siri");
-		addTestPlayer("Joel");
-		addTestPlayer("Vivi");
-		addTestPlayer("Bhavna");
-		addTestPlayer("Lejla");
-		addTestPlayer("Daniel");
-		addTestPlayer("Simon");
+    public void insertTestData()
+    {
+        PlayerList.Clear();
+        addTestPlayer("Axel");
+        addTestPlayer("Siri");
+        addTestPlayer("Joel");
+        addTestPlayer("Vivi");
+        addTestPlayer("Bhavna");
+        addTestPlayer("Lejla");
+        addTestPlayer("Daniel");
+        addTestPlayer("Simon");
 
-		CourtList.Clear();
-		CourtList.Add(new Court { Name = "1" });
-		CourtList.Add(new Court { Name = "2" });
+        CourtList.Clear();
+        CourtList.Add(new Court { Name = "1" });
+        CourtList.Add(new Court { Name = "2" });
 
-		PlayerListJson = JsonSerializer.Serialize(PlayerList);
-		CourtListJson = JsonSerializer.Serialize(CourtList);
-	}
+        PlayerListJson = JsonSerializer.Serialize(PlayerList);
+        CourtListJson = JsonSerializer.Serialize(CourtList);
+    }
 
-	private void addTestPlayer(string playerName)
-	{
-		if (playerName != null)
-		{
-			Player tmp = new Player { Name = playerName };
-			PlayerList.Add(tmp);
-			PlayerListJson = JsonSerializer.Serialize(PlayerList);
-		}
-	}
+    private void addTestPlayer(string playerName)
+    {
+        if (playerName != null)
+        {
+            Player tmp = new Player { Name = playerName };
+            PlayerList.Add(tmp);
+            PlayerListJson = JsonSerializer.Serialize(PlayerList);
+        }
+    }
 }
