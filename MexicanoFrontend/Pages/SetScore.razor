@@ -1,6 +1,8 @@
 ﻿@page "/setscore/{gameresult}"
 @using Models
+@using Services
 @using System.Text.Json;
+@inject IRefreshService refreshService
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 
 
@@ -16,12 +18,16 @@
     [Parameter]
     public GameResult? gameResult{ get; set; }
 
+    [CascadingParameter] BlazoredModalInstance? BlazoredModal { get; set; }
+
+
     protected override void OnParametersSet()
     {
         if (gameResult != null)
         {
-                   
+
         }
+
     }
 
     public void UpdatePlayerScore(int score)
@@ -31,5 +37,11 @@
 
         gameResult.ActivePlayer.Points = score;
         gameResult.Opponent.Points = gameResult.MaxScore - score;
+        refreshService.CallRequestRefresh();
+        if (BlazoredModal != null)
+         BlazoredModal.CloseAsync();
     }
+
+    async Task Close() => await BlazoredModal.CloseAsync(ModalResult.Ok(true));
+
 }

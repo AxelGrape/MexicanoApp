@@ -1,9 +1,11 @@
 ﻿@page "/activegame/{playerlist}/{courtlist}"
 @using Mexicano.Mexicano
+@using Services
 @using System.Text.Json;
 @using MexicanoFrontend.Models
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
 @inject IModalService modal
+@inject IRefreshService refreshService
 
 
 <link rel="stylesheet" href="css/ActiveGame/StyleSheet.css">
@@ -103,6 +105,8 @@
     {
         CourtList = JsonSerializer.Deserialize<List<Court>>(courtlist);
         PlayerList = JsonSerializer.Deserialize<List<Player>>(playerlist);
+        refreshService.RefreshRequested += RefreshMe;
+
 
         // Add 4 players to each court
         if (CourtList != null && PlayerList != null)
@@ -184,6 +188,11 @@
         ModalParameters parameters = new ModalParameters();
         parameters.Add("gameresult", gameResult);
         modal.Show<SetScore>(title: "Set Score", parameters: parameters);
+    }
+
+    private void RefreshMe()
+    {
+        StateHasChanged();
     }
 
 }
