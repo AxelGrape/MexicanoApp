@@ -8,19 +8,19 @@
     "net8.0": []
   },
   "packageFolders": {
-    "C:\\Users\\axepet\\.nuget\\packages\\": {}
+    "C:\\Users\\joewik\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Users\\axepet\\source\\repos\\Mexicano\\Mexicano.csproj",
+      "projectUniqueName": "C:\\Users\\joewik\\Source\\Repos\\AxelGrape\\MexicanoApp\\Mexicano\\Mexicano.csproj",
       "projectName": "Mexicano",
-      "projectPath": "C:\\Users\\axepet\\source\\repos\\Mexicano\\Mexicano.csproj",
-      "packagesPath": "C:\\Users\\axepet\\.nuget\\packages\\",
-      "outputPath": "C:\\Users\\axepet\\source\\repos\\Mexicano\\obj\\",
+      "projectPath": "C:\\Users\\joewik\\Source\\Repos\\AxelGrape\\MexicanoApp\\Mexicano\\Mexicano.csproj",
+      "packagesPath": "C:\\Users\\joewik\\.nuget\\packages\\",
+      "outputPath": "C:\\Users\\joewik\\Source\\Repos\\AxelGrape\\MexicanoApp\\Mexicano\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\axepet\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\joewik\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
