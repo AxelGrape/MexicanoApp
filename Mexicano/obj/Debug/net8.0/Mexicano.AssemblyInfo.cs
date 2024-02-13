@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("Mexicano")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7be739e8782e22e8786cbba7fdf05c1d835fd5bc")]
 [assembly: System.Reflection.AssemblyProductAttribute("Mexicano")]
 [assembly: System.Reflection.AssemblyTitleAttribute("Mexicano")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

@@ -5,6 +5,10 @@ VisualStudioVersion = 17.8.34408.163
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MexicanoFrontend", "MexicanoFrontend.csproj", "{48A2C544-F02F-4044-8692-A6A16E358558}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Mexicano", "..\Mexicano\Mexicano.csproj", "{C07BABAA-69DC-4CCE-B913-40B78A3007B2}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MexicanoFrontent.Test", "..\MexicanoFrontent.Test\MexicanoFrontent.Test.csproj", "{C0096E9E-ED56-487D-8E4E-5456AACF221C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +19,14 @@ Global
 		{48A2C544-F02F-4044-8692-A6A16E358558}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48A2C544-F02F-4044-8692-A6A16E358558}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{48A2C544-F02F-4044-8692-A6A16E358558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C07BABAA-69DC-4CCE-B913-40B78A3007B2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C07BABAA-69DC-4CCE-B913-40B78A3007B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C07BABAA-69DC-4CCE-B913-40B78A3007B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C07BABAA-69DC-4CCE-B913-40B78A3007B2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C0096E9E-ED56-487D-8E4E-5456AACF221C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C0096E9E-ED56-487D-8E4E-5456AACF221C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C0096E9E-ED56-487D-8E4E-5456AACF221C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C0096E9E-ED56-487D-8E4E-5456AACF221C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
