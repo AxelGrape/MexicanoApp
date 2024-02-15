@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\joewik\\source\\repos\\AxelGrape\\MexicanoApp\\Mexicano\\Mexicano.csproj": {}
+    "C:\\Users\\joewik\\Source\\Repos\\AxelGrape\\MexicanoApp\\Mexicano\\Mexicano.csproj": {}
   },
   "projects": {
-    "C:\\Users\\joewik\\source\\repos\\AxelGrape\\MexicanoApp\\Mexicano\\Mexicano.csproj": {
+    "C:\\Users\\joewik\\Source\\Repos\\AxelGrape\\MexicanoApp\\Mexicano\\Mexicano.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\joewik\\source\\repos\\AxelGrape\\MexicanoApp\\Mexicano\\Mexicano.csproj",
+        "projectUniqueName": "C:\\Users\\joewik\\Source\\Repos\\AxelGrape\\MexicanoApp\\Mexicano\\Mexicano.csproj",
         "projectName": "Mexicano",
-        "projectPath": "C:\\Users\\joewik\\source\\repos\\AxelGrape\\MexicanoApp\\Mexicano\\Mexicano.csproj",
+        "projectPath": "C:\\Users\\joewik\\Source\\Repos\\AxelGrape\\MexicanoApp\\Mexicano\\Mexicano.csproj",
         "packagesPath": "C:\\Users\\joewik\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\joewik\\source\\repos\\AxelGrape\\MexicanoApp\\Mexicano\\obj\\",
+        "outputPath": "C:\\Users\\joewik\\Source\\Repos\\AxelGrape\\MexicanoApp\\Mexicano\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\joewik\\AppData\\Roaming\\NuGet\\NuGet.Config",
