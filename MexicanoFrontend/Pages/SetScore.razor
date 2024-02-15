@@ -8,40 +8,53 @@
 
 @for (int i = 0; i <= gameResult!.MaxScore; i++)
 {
-    int tmp = i;
-    <button type="button" @onclick="() => UpdatePlayerScore(tmp)" class="btn btn-primary popup-score-btn" data-toggle="modal" data-target="#setScoreModal">
-        @i
-    </button>
+	int tmp = i;
+	<button type="button" @onclick="() => UpdatePlayerScore(tmp)" class="btn btn-primary popup-score-btn" data-toggle="modal" data-target="#setScoreModal">
+		@i
+	</button>
 }
 
 @code {
-    [Parameter]
-    public GameResult? gameResult{ get; set; }
+	[Parameter]
+	public GameResult? gameResult { get; set; }
 
-    [CascadingParameter] BlazoredModalInstance? BlazoredModal { get; set; }
+	[CascadingParameter] BlazoredModalInstance? BlazoredModal { get; set; }
 
 
-    protected override void OnParametersSet()
-    {
-        if (gameResult != null)
-        {
+	protected override void OnParametersSet()
+	{
+		if (gameResult != null)
+		{
 
-        }
+		}
 
-    }
+	}
 
-    public void UpdatePlayerScore(int score)
-    {
-        if (gameResult == null)
-            return;
+	public void UpdatePlayerScore(int score)
+	{
+		if(CanSetPoints(score) is false)
+		{
+			throw new Exception("Failed to set score from SetScore modal");
+		}
+		gameResult!.ActivePlayer.Points = score;
+		gameResult.Opponent.Points = gameResult.MaxScore - score;
+		refreshService.CallRequestRefresh();
+		if (BlazoredModal != null)
+			BlazoredModal.CloseAsync();
+	}
 
-        gameResult.ActivePlayer.Points = score;
-        gameResult.Opponent.Points = gameResult.MaxScore - score;
-        refreshService.CallRequestRefresh();
-        if (BlazoredModal != null)
-         BlazoredModal.CloseAsync();
-    }
+	public bool CanSetPoints(int score)
+	{
+		if (gameResult == null)
+			return false;
+		if (gameResult.ActivePlayer == null || gameResult.Opponent == null)
+			return false;
+		if (gameResult.MaxScore <= 0 || gameResult.MaxScore < score)
+			return false;
 
-    async Task Close() => await BlazoredModal.CloseAsync(ModalResult.Ok(true));
+		return true;
+	}
+
+	async Task Close() => await BlazoredModal.CloseAsync(ModalResult.Ok(true));
 
 }

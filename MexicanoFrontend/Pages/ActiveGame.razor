@@ -154,9 +154,9 @@
 		activePlayer = p;
 		activeEnemy = enemy;
 	}
-
-	public async void newRound()
+	private void UpdatePlayerListPoints()
 	{
+		//Update the player list with the points from the court
 		List<Player> newPlayerList = new List<Player>();
 		foreach (Court court in CourtList!)
 		{
@@ -172,6 +172,10 @@
 		{
 			PlayerList.ElementAt(i).Points += newPlayerList.ElementAt(i).Points;
 		}
+	}
+	public async void newRound()
+	{
+		UpdatePlayerListPoints();
 
 		String playerListJson = JsonSerializer.Serialize(PlayerList);
 		playerListJson = MexicanoInterface.StartNewRound(playerListJson);
@@ -181,19 +185,6 @@
 		AddPlayersToCourt();
 		RefreshMe();
 		//navigationManager.NavigateTo($"/activegame");
-	}
-
-
-
-	public void UpdatePlayerScore(int score)
-	{
-		if (activePlayer == null || activeEnemy == null)
-			return;
-		if (PointsPerGame <= 0 || PointsPerGame < score)
-			return;
-
-		activePlayer.Points = score;
-		activeEnemy.Points = PointsPerGame - score;
 	}
 
 	public void showStandings()
