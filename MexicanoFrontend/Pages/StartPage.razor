@@ -1,5 +1,6 @@
 ﻿@page "/start"
 @using MexicanoFrontend.Models;
+@using Modals
 @using System.Text.Json;
 @using Mexicano.Mexicano;
 @inject Microsoft.AspNetCore.Components.NavigationManager navigationManager
@@ -204,18 +205,33 @@
     public void insertTestData()
     {
         PlayerList.Clear();
+
         addTestPlayer("Axel");
         addTestPlayer("Siri");
         addTestPlayer("Joel");
         addTestPlayer("Vivi");
+
         addTestPlayer("Bhavna");
         addTestPlayer("Lejla");
         addTestPlayer("Daniel");
         addTestPlayer("Simon");
 
+        addTestPlayer("Kenan");
+        addTestPlayer("Siri");
+        addTestPlayer("Ruchika");
+        addTestPlayer("Emina");
+
+        addTestPlayer("Runpeng");
+        addTestPlayer("Wei");
+        addTestPlayer("Yu-hsuan");
+        addTestPlayer("Per");
+
         CourtList.Clear();
         CourtList.Add(new Court { Name = "1" });
         CourtList.Add(new Court { Name = "2" });
+        CourtList.Add(new Court { Name = "3" });
+        CourtList.Add(new Court { Name = "4" });
+
 
         PlayerListJson = JsonSerializer.Serialize(PlayerList);
         CourtListJson = JsonSerializer.Serialize(CourtList);
