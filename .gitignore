@@ -396,6 +396,8 @@ FodyWeavers.xsd
 
 # JetBrains Rider
 *.sln.iml
+/Mexicano/obj/*
+/Mexicano/bin/*
 /Mexicano/obj/Debug/net8.0/Mexicano.AssemblyInfo.cs
 /Mexicano/obj/Debug/net8.0/Mexicano.AssemblyInfoInputs.cache
 /Mexicano/obj/Debug/net8.0/Mexicano.assets.cache

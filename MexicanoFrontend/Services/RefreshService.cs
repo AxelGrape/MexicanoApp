@@ -8,9 +8,10 @@
 
     public class RefreshService : IRefreshService
     {
-        public event Action RefreshRequested;
+        public event Action? RefreshRequested;
         public void CallRequestRefresh()
         {
+            if(RefreshRequested != null )   
             RefreshRequested?.Invoke();
         }
     }
