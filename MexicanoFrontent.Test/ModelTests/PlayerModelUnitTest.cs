@@ -11,12 +11,11 @@ namespace MexicanoFrontent.Test.ModelTests
 	public class PlayerModelUnitTest
 	{
 		[Fact]
-		public void CopyPlayerTest()
+		public void CopyPlayer_CopyOriginalPlayer_ReturnDifferentPlayer()
 		{
 			Player originalPlayer = new Player { Name = "Olle"};
+
 			Player copyPlayer = originalPlayer.CopyPlayer();
-
-
 			copyPlayer.Points = 10;
 
 			Assert.False(copyPlayer.Equals(originalPlayer));	
